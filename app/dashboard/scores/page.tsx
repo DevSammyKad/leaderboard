@@ -9,10 +9,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { auth } from '@clerk/nextjs/server';
 
 export const revalidate = 3;
 
 const page = async () => {
+  const { userId, redirectToSignIn } = await auth();
+
+  if (!userId) return redirectToSignIn();
   const data = await prisma.player.findMany({
     include: {
       performances: true,
